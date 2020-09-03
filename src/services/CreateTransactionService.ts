@@ -20,15 +20,13 @@ class CreateTransactionService {
     this.categoryRepository = new CategoryRepository();
   }
 
-  public async execute({
-    title,
-    type,
-    value,
-    category,
-  }: IRequest): Promise<Transaction> {
+  public async execute(
+    { title, type, value, category }: IRequest,
+    check = true,
+  ): Promise<Transaction> {
     const balance = await this.repository.getBalance();
 
-    if (type === 'outcome' && balance.total < value) {
+    if (type === 'outcome' && balance.total < value && check) {
       throw new AppError('Insuficient founds');
     }
 
